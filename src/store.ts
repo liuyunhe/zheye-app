@@ -4,13 +4,14 @@ import { testData, testPosts, ColumnProps, PostProps } from "./testData";
 interface Userprops {
   isLogin: boolean;
   name?: string;
-  id?: number
+  id?: number,
+  columnId?: number   //  文章标识
 }
 
 export interface GlobalDataProps {
   columns: ColumnProps[];
   posts: PostProps[];
-  user: Userprops
+  user: Userprops,
 }
 
 const store = createStore<GlobalDataProps>({
@@ -18,7 +19,9 @@ const store = createStore<GlobalDataProps>({
     columns: testData,
     posts: testPosts,
     user: {
-      isLogin: false
+      isLogin: true,
+      name: 'liuyunhe',
+      columnId: 1
     }
   },
   getters: {
@@ -35,6 +38,9 @@ const store = createStore<GlobalDataProps>({
   mutations: {
     login(state) {
       state.user = { ...state.user, isLogin: true, name: 'liuyunhe' }
+    },
+    createPost(state, newPost) {
+      state.posts.push(newPost)
     }
   }
 })

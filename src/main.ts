@@ -8,6 +8,3 @@ app.use(router)
 app.use(store)
 app.mount('#app')
 
-// router.beforeEach(()=>{
-//   window.scrollTo(0, 0)
-// })
