@@ -1,7 +1,27 @@
-import { createStore } from "vuex";
-import { testData, testPosts, ColumnProps, PostProps } from "./testData";
+import { Commit, createStore } from "vuex";
+import axios from 'axios'
 
-interface Userprops {
+interface ImageProps {
+  _id?: string,
+  url?: string,
+  createdAt?: string
+}
+export interface ColumnProps {
+  _id: string;
+  title: string;
+  avatar?: ImageProps;
+  description: string;
+}
+export interface PostProps {
+  _id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image?: ImageProps;
+  createdAt: string;
+  column: string;
+}
+export interface Userprops {
   isLogin: boolean;
   name?: string;
   id?: number,
@@ -9,15 +29,22 @@ interface Userprops {
 }
 
 export interface GlobalDataProps {
+  loading: boolean;
   columns: ColumnProps[];
   posts: PostProps[];
   user: Userprops,
 }
 
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+  const { data } = await axios.get(url)
+  commit(mutationName, data)
+}
+
 const store = createStore<GlobalDataProps>({
   state: {
-    columns: testData,
-    posts: testPosts,
+    loading: false,
+    columns: [],
+    posts: [],
     user: {
       isLogin: true,
       name: 'liuyunhe',
@@ -25,14 +52,11 @@ const store = createStore<GlobalDataProps>({
     }
   },
   getters: {
-    biggerColumnLen(state) {
-      return state.columns.filter((c) => c.id > 2).length
+    getColumnById: (state) => (id: string) => {
+      return state.columns.find((clumn) => clumn._id === id)
     },
-    getColumnById: (state) => (id: number) => {
-      return state.columns.find((clumn) => clumn.id === id)
-    },
-    getPostById: (state) => (columnId: number) => {
-      return state.posts.filter((post) => post.columnId === columnId)
+    getPostById: (state) => (columnId: string) => {
+      return state.posts.filter((post) => post.column === columnId)
     }
   },
   mutations: {
@@ -41,6 +65,29 @@ const store = createStore<GlobalDataProps>({
     },
     createPost(state, newPost) {
       state.posts.push(newPost)
+    },
+    fetchColumns(state, rawData) {
+      state.columns = rawData.data.list
+    },
+    fetchColumn(state, rawData) {
+      state.columns = [rawData.data]
+    },
+    fetchPosts(state, rawData) {
+      state.posts = rawData.data.list
+    },
+    setLoading(state, status) {
+      state.loading = status
+    }
+  },
+  actions: {
+    fetchColumns({ commit }) {
+      getAndCommit('/columns','fetchColumns',commit)
+    },
+    fetchColumn({ commit }, cid) {
+      getAndCommit(`/columns/${cid}`,'fetchColumn',commit)
+    },
+    fetchPosts({ commit }, cid) {
+      getAndCommit(`/columns/${cid}/posts`,'fetchPosts',commit)
     }
   }
 })
