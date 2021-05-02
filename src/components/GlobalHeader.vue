@@ -1,19 +1,35 @@
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
-     <router-link class="navbar-brand" to="/">者也专栏</router-link>
-     <ul class="list-inline mb-0" v-if="!user.isLogin">
-       <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">登录</router-link></li>
-       <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">注册</router-link></li>
-     </ul>
-     <ul class="list-inline mb-0" v-else>
-       <li class="list-inline-item">
-         <dropdown :title="`你好，${user.name}`">
-           <dropdown-item><a class="dropdown-item" href="#">新建文章</a></dropdown-item>
-           <dropdown-item disabled><a class="dropdown-item" href="#">编辑资料</a></dropdown-item>
-           <dropdown-item><a class="dropdown-item" href="#">退出登录</a></dropdown-item>
-         </dropdown>
-       </li>
-     </ul>
+    <div class="container">
+      <router-link class="navbar-brand" to="/">者也专栏</router-link>
+      <ul class="list-inline mb-0" v-if="!user.isLogin">
+        <li class="list-inline-item">
+          <router-link to="/login" class="btn btn-outline-light my-2"
+            >登录</router-link
+          >
+        </li>
+        <li class="list-inline-item">
+          <router-link to="/login" class="btn btn-outline-light my-2"
+            >注册</router-link
+          >
+        </li>
+      </ul>
+      <ul class="list-inline mb-0" v-else>
+        <li class="list-inline-item">
+          <dropdown :title="`你好，${user.name}`">
+            <dropdown-item
+              ><a class="dropdown-item" href="#">新建文章</a></dropdown-item
+            >
+            <dropdown-item disabled
+              ><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
+            >
+            <dropdown-item
+              ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
+            >
+          </dropdown>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
