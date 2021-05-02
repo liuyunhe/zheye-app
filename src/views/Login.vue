@@ -30,8 +30,10 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from 'vuex'
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
+import { GlobalDataProps } from "@/store";
 
 export default defineComponent({
   name: "Login",
@@ -41,12 +43,13 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
+    const store = useStore<GlobalDataProps>();
 
     const emailVal = ref("");
     const passwordVal = ref("");
     const emailRules: RulesProp = [
-      { type: "required", message: "电子邮箱地址不能为空" },
-      { type: "email", message: "请输入正确的电子邮箱格式" },
+      { type: "required", message: "电子邮箱地址不能为空!" },
+      { type: "email", message: "请输入正确的电子邮箱格式!" },
     ];
     const passwordRules: RulesProp = [
       { type: "required", message: "密码不能为空" },
@@ -55,7 +58,8 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       console.log("result", result);
       if (result) {
-        router.push(`/column/1`);
+        router.push(`/`);
+        store.commit('login')
       }
     };
 
