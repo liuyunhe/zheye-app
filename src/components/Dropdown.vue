@@ -13,8 +13,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs, watch } from "vue";
+import { defineComponent, reactive, ref, toRefs, watch, onUnmounted } from "vue";
 import useClickOutside from "../hooks/useClickOutside";
+import mitt from "mitt";
+
+export const emitter = mitt();
 export default defineComponent({
   name: "dropdown",
   props: {
@@ -37,6 +40,16 @@ export default defineComponent({
     watch(isClickOutside, () => {
       if (data.isOpen && isClickOutside.value) data.isOpen = false;
     });
+
+    const onCloseDropdown = () => {
+      data.isOpen = false
+    }
+
+    emitter.on('close-dropdown', onCloseDropdown)
+    
+    onUnmounted(() => {
+      emitter.off('close-dropdown', onCloseDropdown)
+    })
 
     return {
       dropdownRef,
