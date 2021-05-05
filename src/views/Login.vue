@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import { GlobalDataProps } from "@/store";
@@ -60,12 +60,17 @@ export default defineComponent({
       if (result) {
         const payLoad = {
           email: emailVal.value,
-          password: passwordVal.value
-        }
-        store.dispatch('loginAndFetch',payLoad).then((data) => {
-          console.log(data)
-          router.push(`/`);
-        },)
+          password: passwordVal.value,
+        };
+        store
+          .dispatch("loginAndFetch", payLoad)
+          .then((data) => {
+            console.log(data);
+            router.push(`/`);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     };
 

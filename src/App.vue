@@ -1,6 +1,15 @@
 <template>
   <global-header :user="user"></global-header>
-  <loader v-if="isLoading" text="拼命加载中..." background="rgba(0,0,0,0.8)"></loader>
+  <loader
+    v-if="isLoading"
+    text="拼命加载中..."
+    background="rgba(0,0,0,0.8)"
+  ></loader>
+  <message
+    :type="'error'"
+    :message="error.message"
+    v-if="error.status"
+  ></message>
   <div class="container">
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -26,20 +35,24 @@ import GlobalHeader from "./components/GlobalHeader.vue";
 
 import { GlobalDataProps } from "./store";
 import Loader from "./components/Loader.vue";
+import Message from "./components/Message.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     GlobalHeader,
     Loader,
+    Message,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     const currentUser = computed(() => store.state.user);
-    const isLoading = computed(()=>store.state.loading)
+    const isLoading = computed(() => store.state.loading);
+    const error = computed(() => store.state.error);
     return {
       user: currentUser,
-      isLoading
+      isLoading,
+      error,
     };
   },
 });

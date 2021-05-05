@@ -2,8 +2,8 @@ import { Commit, createStore } from "vuex";
 import axios from 'axios'
 
 interface ImageProps {
-  _id?: string,
-  url?: string,
+  _id?: string;
+  url?: string;
   createdAt?: string
 }
 export interface ColumnProps {
@@ -24,17 +24,23 @@ export interface PostProps {
 export interface Userprops {
   isLogin: boolean;
   nickName?: string;
-  _id?: string,
-  column?: string,   //  文章标识
-  email?: string,
+  _id?: string;
+  column?: string;   //  文章标识
+  email?: string
 }
 
 export interface GlobalDataProps {
-  token: string,
+  error: GlobalErrorProps;
+  token: string;
   loading: boolean;
   columns: ColumnProps[];
   posts: PostProps[];
-  user: Userprops,
+  user: Userprops;
+}
+
+export interface GlobalErrorProps {
+  status: boolean;
+  message?: string
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
@@ -50,6 +56,9 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 
 const store = createStore<GlobalDataProps>({
   state: {
+    error: {
+      status: false
+    },
     token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
@@ -90,6 +99,9 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading(state, status) {
       state.loading = status
+    },
+    setError(state, e: GlobalErrorProps) {
+      state.error = e
     }
   },
   actions: {

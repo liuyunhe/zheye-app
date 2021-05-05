@@ -8,12 +8,21 @@ axios.interceptors.request.use(config => {
   store.commit('setLoading', true)
   return config
 })
-axios.interceptors.response.use(config => {
-  nextTick(()=>{
-    store.commit('setLoading', false)
+axios.interceptors.response.use(
+  config => {
+    nextTick(() => {
+      store.commit('setLoading', false)
+    })
+    return config
+  },
+  e => {
+    const { error } = e.response.data
+    store.commit('setError', { status: true, message: error })
+    nextTick(() => {
+      store.commit('setLoading', false)
+    })
+    return Promise.reject(error)
   })
-  return config
-})
 
 const app = createApp(App)
 app.use(router)
