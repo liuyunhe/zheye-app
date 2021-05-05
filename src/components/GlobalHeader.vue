@@ -36,9 +36,7 @@
 </template>
 
 <script lang="ts">
-import { GlobalDataProps, Userprops } from "@/store";
-import axios from "axios";
-import { useStore } from "vuex";
+import {  Userprops } from "@/store";
 import { defineComponent, PropType } from "vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownItem from "./DropdownItem.vue";
@@ -53,12 +51,7 @@ export default defineComponent({
     },
   },
   setup() {
-    if (localStorage.getItem("token")) {
-      const store = useStore<GlobalDataProps>();
-      const token = localStorage.getItem("token");
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      store.dispatch('fetchCurrentUser')
-    }
+    
     return {};
   },
 });

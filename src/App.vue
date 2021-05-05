@@ -29,26 +29,38 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { GlobalDataProps } from "./store";
 import GlobalHeader from "./components/GlobalHeader.vue";
 
 import { GlobalDataProps } from "./store";
 import Loader from "./components/Loader.vue";
-import Message from "./components/Message.vue";
+// import Message from "./components/Message.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     GlobalHeader,
     Loader,
-    Message,
+    // Message,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     const currentUser = computed(() => store.state.user);
+    const token = computed(() => store.state.token);
     const isLoading = computed(() => store.state.loading);
     const error = computed(() => store.state.error);
+
+    onMounted(() => {
+      if (!currentUser.value.isLogin && token.value) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token.value}`;
+        store.dispatch("fetchCurrentUser");
+      }
+    });
     return {
       user: currentUser,
       isLoading,
