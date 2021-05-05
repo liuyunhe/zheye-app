@@ -5,11 +5,11 @@
     text="拼命加载中..."
     background="rgba(0,0,0,0.8)"
   ></loader>
-  <message
+  <!-- <message
     :type="'error'"
     :message="error.message"
     v-if="error.status"
-  ></message>
+  ></message> -->
   <div class="container">
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -27,16 +27,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { GlobalDataProps } from "./store";
 import GlobalHeader from "./components/GlobalHeader.vue";
-
-import { GlobalDataProps } from "./store";
 import Loader from "./components/Loader.vue";
+import createMessage from "./components/createMessage";
 // import Message from "./components/Message.vue";
 
 export default defineComponent({
@@ -61,6 +60,16 @@ export default defineComponent({
         store.dispatch("fetchCurrentUser");
       }
     });
+
+    watch(
+      () => error.value.status,
+      () => {
+        const { status, message } = error.value;
+        if (status && message) {
+          createMessage(message, "error");
+        }
+      }
+    );
     return {
       user: currentUser,
       isLoading,

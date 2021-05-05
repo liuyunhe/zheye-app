@@ -34,6 +34,7 @@ import { useStore } from "vuex";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import { GlobalDataProps } from "@/store";
+import createMessage from "@/components/createMessage";
 
 export default defineComponent({
   name: "Login",
@@ -64,9 +65,11 @@ export default defineComponent({
         };
         store
           .dispatch("loginAndFetch", payLoad)
-          .then((data) => {
-            console.log(data);
-            router.push(`/`);
+          .then(() => {
+            createMessage("登录成功!2秒后跳转首页", "success");
+            setTimeout(() => {
+              router.push(`/`);
+            }, 2000);
           })
           .catch((e) => {
             console.log(e);
