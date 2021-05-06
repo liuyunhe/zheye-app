@@ -87,6 +87,11 @@ const store = createStore<GlobalDataProps>({
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },
+    logout(state) {
+      state.token = ''
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common.Authorization
+    },
     fetchCurrentUser(state, rawData) {
       state.user = { ...rawData.data, isLogin: true }
     },
