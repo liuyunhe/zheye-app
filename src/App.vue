@@ -1,6 +1,15 @@
 <template>
   <global-header :user="user"></global-header>
-  <loader v-if="isLoading" text="拼命加载中..." background="rgba(0,0,0,0.8)"></loader>
+  <loader
+    v-if="isLoading"
+    text="拼命加载中..."
+    background="rgba(0,0,0,0.8)"
+  ></loader>
+  <!-- <message
+    :type="'error'"
+    :message="error.message"
+    v-if="error.status"
+  ></message> -->
   <div class="container">
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -18,28 +27,53 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useStore } from "vuex";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import GlobalHeader from "./components/GlobalHeader.vue";
-
 import { GlobalDataProps } from "./store";
+import GlobalHeader from "./components/GlobalHeader.vue";
 import Loader from "./components/Loader.vue";
+import createMessage from "./components/createMessage";
+// import Message from "./components/Message.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     GlobalHeader,
     Loader,
+    // Message,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     const currentUser = computed(() => store.state.user);
-    const isLoading = computed(()=>store.state.loading)
+    const token = computed(() => store.state.token);
+    const isLoading = computed(() => store.state.loading);
+    const error = computed(() => store.state.error);
+
+    onMounted(() => {
+      if (!currentUser.value.isLogin && token.value) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token.value}`;
+        store.dispatch("fetchCurrentUser");
+      }
+    });
+
+    watch(
+      () => error.value.status,
+      () => {
+        const { status, message } = error.value;
+        if (status && message) {
+          createMessage(message, "error");
+        }
+      }
+    );
     return {
       user: currentUser,
-      isLoading
+      isLoading,
+      error,
     };
   },
 });

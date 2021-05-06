@@ -30,10 +30,11 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import { GlobalDataProps } from "@/store";
+import createMessage from "@/components/createMessage";
 
 export default defineComponent({
   name: "Login",
@@ -58,8 +59,21 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       console.log("result", result);
       if (result) {
-        router.push(`/`);
-        store.commit('login')
+        const payLoad = {
+          email: emailVal.value,
+          password: passwordVal.value,
+        };
+        store
+          .dispatch("loginAndFetch", payLoad)
+          .then(() => {
+            createMessage("登录成功!2秒后跳转首页", "success");
+            setTimeout(() => {
+              router.push(`/`);
+            }, 2000);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     };
 
