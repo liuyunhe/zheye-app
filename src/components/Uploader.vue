@@ -62,7 +62,12 @@ export default defineComponent({
         const files = Array.from(currentTarget.files);
         if (props.beforeUpload) {
           const result = props.beforeUpload(files[0]);
-          if (!result) return;
+          if (!result) {
+            if (fileInput.value) {
+              fileInput.value.value = "";
+            }
+            return;
+          }
         }
         fileStatus.value = "loading";
         const formData = new FormData();
