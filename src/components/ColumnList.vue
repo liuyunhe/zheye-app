@@ -5,7 +5,7 @@
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light my-3"
-            :src="column.avatar && `${column.avatar.url}?x-oss-process=image/resize,m_pad,h_50,w_50`"
+            :src="column.avatar && column.avatar.fitUrl"
             :alt="column.title"
           />
           <h5 class="card-title">{{ column.title }}</h5>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { ColumnProps } from "../store";
+import { generateFitUrl } from "../helper";
 
 export default defineComponent({
   name: "ColumnList",
@@ -36,23 +37,19 @@ export default defineComponent({
   setup(props) {
     const columnList = computed(() => {
       return props.list.map((column) => {
-        if (!column.avatar) {
-          column.avatar = {
-            url: require("@/assets/column.jpg"),
-          };
-        }
+        generateFitUrl(column, 50, 50);
         return column;
       });
     });
     return {
-      columnList,
+      columnList,   
     };
   },
 });
 </script>
 
 <style scoped>
-.card-body img{
+.card-body img {
   width: 50px;
   height: 50px;
 }
