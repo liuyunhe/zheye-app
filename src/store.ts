@@ -4,7 +4,8 @@ import axios from 'axios'
 export interface ImageProps {
   _id?: string;
   url?: string;
-  createdAt?: string
+  createdAt?: string;
+  fitUrl?: string
 }
 export interface ColumnProps {
   _id: string;
