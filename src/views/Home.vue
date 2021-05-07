@@ -19,8 +19,9 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
 import { useStore } from "vuex";
-import { GlobalDataProps } from "../store";
+import { GlobalDataProps, ImageProps, ResponseType } from "../store";
 import ColumnList from "../components/ColumnList.vue";
+import createMessage from "@/components/createMessage";
 
 export default defineComponent({
   name: "Home",
@@ -31,12 +32,26 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>();
     const list = computed(() => store.state.columns);
 
+    const beforeUpload = (file: File) => {
+      const isJPG = file.type === "image/jpeg";
+      if (!isJPG) {
+        createMessage("上传图片只能是JPG格式", "error");
+      }
+      return isJPG;
+    };
+
+    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      createMessage(`上传图片ID${rawData.data._id}`, "success");
+    };
+
     onMounted(() => {
-      store.dispatch('fetchColumns')
-    })
+      store.dispatch("fetchColumns");
+    });
 
     return {
-      list
+      list,
+      beforeUpload,
+      onFileUploaded,
     };
   },
 });

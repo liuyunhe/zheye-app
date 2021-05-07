@@ -1,10 +1,11 @@
 import { Commit, createStore } from "vuex";
 import axios from 'axios'
 
-interface ImageProps {
+export interface ImageProps {
   _id?: string;
   url?: string;
-  createdAt?: string
+  createdAt?: string;
+  fitUrl?: string
 }
 export interface ColumnProps {
   _id: string;
@@ -28,7 +29,11 @@ export interface Userprops {
   column?: string;   //  文章标识
   email?: string
 }
-
+export interface ResponseType<T> {
+  code: number;
+  msg: string;
+  data: T
+}
 export interface GlobalDataProps {
   error: GlobalErrorProps;
   token: string;
@@ -46,6 +51,7 @@ export interface GlobalErrorProps {
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
+  return data
 }
 // eslint-disable-next-line
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payLoad: any) => {
@@ -82,6 +88,11 @@ const store = createStore<GlobalDataProps>({
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },
+    logout(state) {
+      state.token = ''
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common.Authorization
+    },
     fetchCurrentUser(state, rawData) {
       state.user = { ...rawData.data, isLogin: true }
     },
@@ -109,7 +120,7 @@ const store = createStore<GlobalDataProps>({
       return postAndCommit('/user/login', 'login', commit, payLoad)
     },
     fetchCurrentUser({ commit }) {
-      getAndCommit('/user/current', 'fetchCurrentUser', commit)
+      return getAndCommit('/user/current', 'fetchCurrentUser', commit)
     },
     loginAndFetch({ dispatch }, loginData) {
       return dispatch('login', loginData).then(() => {
