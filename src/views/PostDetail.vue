@@ -22,7 +22,7 @@
         >
       </div>
       <div v-html="currentHTML"></div>
-      <!-- <div v-if="showEditArea" class="btn-group mt-5">
+      <div v-if="showEditArea" class="btn-group mt-5">
         <router-link
           type="button"
           class="btn btn-success"
@@ -37,7 +37,7 @@
         >
           删除
         </button>
-      </div> -->
+      </div>
     </article>
   </div>
 </template>
@@ -47,11 +47,7 @@ import { defineComponent, onMounted, computed } from "vue";
 import MarkdownIt from "markdown-it";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import {
-  GlobalDataProps,
-  PostProps,
-  ImageProps,
-} from "../store";
+import { GlobalDataProps, PostProps, ImageProps, Userprops } from "../store";
 import UserProfile from "../components/UserProfile.vue";
 
 export default defineComponent({
@@ -69,7 +65,7 @@ export default defineComponent({
     const md = new MarkdownIt();
 
     onMounted(() => {
-      console.log(store.state.posts)
+      console.log(store.state.posts);
       store.dispatch("fetchPost", currentId);
     });
 
@@ -78,22 +74,30 @@ export default defineComponent({
     );
 
     const currentHTML = computed(() => {
-      const { content, isHTML } = currentPost.value
+      const { content, isHTML } = currentPost.value;
       if (currentPost.value && content) {
-        return isHTML ? content : md.render(content)
-      }else{
-        return null
+        return isHTML ? content : md.render(content);
+      } else {
+        return null;
       }
     });
-    
+
     const currentImageUrl = computed(() => {
       if (currentPost.value && currentPost.value.image) {
         const { image } = currentPost.value;
-        return (
-          (image as ImageProps).url + "?x-oss-process=image/resize,w_850"
-        );
+        return (image as ImageProps).url + "?x-oss-process=image/resize,w_850";
       } else {
         return null;
+      }
+    });
+
+    const showEditArea = computed(() => {
+      const { isLogin, _id } = store.state.user;
+      if (currentPost.value && currentPost.value.author && isLogin) {
+        const postAuthor = currentPost.value.author as Userprops;
+        return postAuthor._id === _id;
+      } else {
+        return false;
       }
     });
 
@@ -101,6 +105,7 @@ export default defineComponent({
       currentPost,
       currentImageUrl,
       currentHTML,
+      showEditArea,
     };
   },
 });
