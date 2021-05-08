@@ -14,7 +14,7 @@ export interface ColumnProps {
   description: string;
 }
 export interface PostProps {
-  _id?: string;
+  _id?: string;         //  文章识别标识
   title: string;
   excerpt?: string;
   content?: string;
@@ -38,8 +38,8 @@ export interface PostProps1 {
 export interface Userprops {
   isLogin: boolean;
   nickName?: string;
-  _id?: string;
-  column?: string;   //  文章标识
+  _id?: string;        //  用户识别标识
+  column?: string;     //  所著文章标识
   email?: string;
   avatar?: ImageProps;
   description?: string;
