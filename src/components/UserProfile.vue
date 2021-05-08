@@ -6,7 +6,7 @@
         :alt="user.nickName"
         class="rounded-circle img-thumbnail"
       />
-      <div class="detail ml-2">
+      <div class="detail ms-3">
         <h6 class="d-block mb-0">{{ user.nickName }}</h6>
         <span class="text-truncate text-muted d-block">{{
           user.description
