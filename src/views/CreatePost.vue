@@ -113,7 +113,7 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId;
           }
-          store.dispatch("createPosts", newPost).then(() => {
+          store.dispatch("createPost", newPost).then(() => {
             createMessage("发表成功，2秒后跳转到文章", "success", 2000);
           });
           setTimeout(() => {
