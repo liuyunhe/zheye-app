@@ -1,6 +1,6 @@
 <template>
   <div class="create-post-page">
-    <h4>新建文章</h4>
+    <h4>{{ isEditMode ? "编辑文章" : "新建文章" }}</h4>
     <uploader
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -46,7 +46,7 @@
         ></validate-input>
       </div>
       <template #submit>
-        <button class="btn btn-primary btn-large">发表文章</button>
+        <button class="btn btn-primary btn-large">{{ isEditMode ? "更新文章" : "发表文章" }}</button>
       </template>
     </validate-form>
   </div>
@@ -56,9 +56,9 @@
 import ValidateForm from "@/components/ValidateForm.vue";
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue";
 import { useStore } from "vuex";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { GlobalDataProps, ResponseType, ImageProps, PostProps } from "@/store";
-import router from "@/router";
 import Uploader from "@/components/Uploader.vue";
 import { beforeUploadCheck } from "@/helper";
 import createMessage from "@/components/createMessage";
@@ -68,13 +68,17 @@ export default defineComponent({
   name: "CreatePost",
   setup() {
     const store = useStore<GlobalDataProps>();
+    const route = useRoute();
+    const router = useRouter();
+    const isEditMode = !!route.query.id; // 判断是否是编辑模式
+    const uploadedData = ref();
 
+    const titleVal = ref("");
     const titleRules: RulesProp = [
       { type: "required", message: "文章标题不能为空!" },
     ];
-    const titleVal = ref("");
-    const contentVal = ref("");
 
+    const contentVal = ref("");
     const contentRules: RulesProp = [
       { type: "required", message: "文章详情不能为空!" },
     ];
@@ -100,6 +104,20 @@ export default defineComponent({
         imageId = rawData.data._id;
       }
     };
+    onMounted(() => {
+      if (isEditMode) {
+        store
+          .dispatch("fetchPost", route.query.id)
+          .then((rawData: ResponseType<PostProps>) => {
+            const currentPost = rawData.data;
+            if (currentPost.image) {
+              uploadedData.value = currentPost.image;
+            }
+            titleVal.value = currentPost.title;
+            contentVal.value = currentPost.content || "";
+          });
+      }
+    });
     //  提交文章
     const onFormSubmit = (result: boolean) => {
       if (result) {
@@ -114,7 +132,15 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId;
           }
-          store.dispatch("createPost", newPost).then(() => {
+          const actionName = isEditMode ? "updatePost" : "createPost";
+          const sendData = isEditMode
+            ? {
+                id: route.query.id,
+                payLoad: newPost,
+              }
+            : newPost;
+
+          store.dispatch(actionName, sendData).then(() => {
             createMessage("发表成功，2秒后跳转到文章", "success", 2000);
           });
           setTimeout(() => {
@@ -132,6 +158,8 @@ export default defineComponent({
       contentVal,
       uploadCheck,
       handleFileUploaded,
+      uploadedData,
+      isEditMode,
     };
   },
 });
