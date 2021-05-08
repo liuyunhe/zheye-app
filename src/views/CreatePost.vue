@@ -5,6 +5,7 @@
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
+      :uploaded="uploadedData"
       @file-uploaded="handleFileUploaded"
     >
       <h2>点击上传头图</h2>
