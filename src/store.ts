@@ -14,20 +14,35 @@ export interface ColumnProps {
   description: string;
 }
 export interface PostProps {
-  _id: string;
+  _id?: string;
   title: string;
-  excerpt: string;
-  content: string;
-  image?: ImageProps;
-  createdAt: string;
+  excerpt?: string;
+  content?: string;
+  image?: ImageProps | string;
+  createdAt?: string;
   column: string;
+  author?: string;
+  isHTML?: boolean;
+}
+export interface PostProps1 {
+  _id?: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  image?: ImageProps;
+  createdAt?: string;
+  column: string;
+  author?: string;
+  isHTML?: boolean;
 }
 export interface Userprops {
   isLogin: boolean;
   nickName?: string;
   _id?: string;
   column?: string;   //  文章标识
-  email?: string
+  email?: string;
+  avatar?: ImageProps;
+  description?: string;
 }
 export interface ResponseType<T> {
   code: number;
@@ -79,6 +94,9 @@ const store = createStore<GlobalDataProps>({
     },
     getPostById: (state) => (columnId: string) => {
       return state.posts.filter((post) => post.column === columnId)
+    },
+    getCurrentPost: (state) => (id: string) => {
+      return state.posts.find(post => post._id === id)
     }
   },
   mutations: {
@@ -108,6 +126,10 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, rawData) {
       state.posts = rawData.data.list
     },
+    fetchPost(state, rawData) {
+      state.posts = [rawData.data]
+      console.log(state.posts)
+    },
     setLoading(state, status) {
       state.loading = status
     },
@@ -128,13 +150,19 @@ const store = createStore<GlobalDataProps>({
       })
     },
     fetchColumns({ commit }) {
-      getAndCommit('/columns', 'fetchColumns', commit)
+      return getAndCommit('/columns', 'fetchColumns', commit)
     },
     fetchColumn({ commit }, cid) {
-      getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
+      return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
     },
     fetchPosts({ commit }, cid) {
-      getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+      return getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
+    },
+    fetchPost({ commit }, id) {
+      return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
+    },
+    createPost({ commit }, payLoad) {
+      return postAndCommit(`/posts`, 'createPost', commit, payLoad)
     },
 
   }
