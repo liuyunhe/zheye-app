@@ -6,7 +6,7 @@ import Login from "./views/Login.vue";
 import ColumnDetail from "./views/ColumnDetail.vue";
 import Create from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
-
+import PostDetail from './views/PostDetail.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -43,6 +43,11 @@ const router = createRouter({
       name: 'signup',
       component: Signup,
     },
+    {
+      path: '/posts/:id',
+      name: 'post',
+      component: PostDetail
+    }
   ]
 })
 
