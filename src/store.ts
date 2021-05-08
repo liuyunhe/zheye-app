@@ -1,5 +1,5 @@
 import { Commit, createStore } from "vuex";
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
 export interface ImageProps {
   _id?: string;
@@ -21,7 +21,7 @@ export interface PostProps {
   image?: ImageProps | string;
   createdAt?: string;
   column: string;
-  author?: string;
+  author?: string | Userprops;
   isHTML?: boolean;
 }
 export interface PostProps1 {
@@ -71,6 +71,11 @@ const getAndCommit = async (url: string, mutationName: string, commit: Commit) =
 // eslint-disable-next-line
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payLoad: any) => {
   const { data } = await axios.post(url, payLoad)
+  commit(mutationName, data)
+  return data
+}
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'GET' }) => {
+  const { data } = await axios(url, config)
   commit(mutationName, data)
   return data
 }
@@ -130,6 +135,15 @@ const store = createStore<GlobalDataProps>({
       state.posts = [rawData.data]
       console.log(state.posts)
     },
+    updatePost(state, { data }) {
+      state.posts = state.posts.map(post => {
+        if (post._id === data._id) {
+          return data
+        } else {
+          return post
+        }
+      })
+    },
     setLoading(state, status) {
       state.loading = status
     },
@@ -160,6 +174,9 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPost({ commit }, id) {
       return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
+    },
+    updatePost({ commit }, { id, payLoad }) {
+      return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, { method: 'PATCH', data: payLoad })
     },
     createPost({ commit }, payLoad) {
       return postAndCommit(`/posts`, 'createPost', commit, payLoad)
