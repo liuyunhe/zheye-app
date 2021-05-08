@@ -1,6 +1,6 @@
 <template>
   <div class="validate-input-container pb-3">
-    <input
+    <!-- <input
       v-if="tag !== 'textarea'"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
@@ -8,14 +8,21 @@
       @blur="validateInput"
       @input="updatedValue"
       v-bind="$attrs"
+    /> -->
+    <input
+      v-if="tag !== 'textarea'"
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.error }"
+      v-model="inputRef.val"
+      @blur="validateInput"
+      v-bind="$attrs"
     />
     <textarea
       v-else
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
-      :value="inputRef.val"
+      v-model="inputRef.val"
       @blur="validateInput"
-      @input="updatedValue"
       v-bind="$attrs"
     />
     <span v-if="inputRef.error" class="invalid-feedback">{{
@@ -25,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, onMounted } from "vue";
+import { defineComponent, PropType, reactive, onMounted, computed } from "vue";
 import { emitter } from "./ValidateForm.vue";
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -49,16 +56,29 @@ export default defineComponent({
   setup(props, context) {
     const inputRef = reactive({
       //  直接赋值modelValue
-      val: props.modelValue || "",
+      val: computed({
+        get:()=>{
+          return props.modelValue || ''
+        },
+        set:val=>{
+          context.emit("update:modelValue", val);
+        }
+      }),
       error: false,
       message: "",
     });
 
-    const updatedValue = (e: KeyboardEvent) => {
-      const targetValue = (e.target as HTMLInputElement).value;
-      inputRef.val = targetValue;
-      context.emit("update:modelValue", targetValue);
-    };
+    //  手动执行v-model
+    // watch(()=>props.modelValue, (newValue)=>{
+    //   console.log('watch triggered')
+    //   inputRef.val = newValue || ''
+    // })
+
+    // const updatedValue = (e: KeyboardEvent) => {
+    //   const targetValue = (e.target as HTMLInputElement).value;
+    //   inputRef.val = targetValue;
+    //   context.emit("update:modelValue", targetValue);
+    // };
 
     const validateInput = () => {
       if (props.rules) {
@@ -92,8 +112,8 @@ export default defineComponent({
 
     return {
       inputRef,
-      updatedValue,
       validateInput,
+      // updatedValue,
     };
   },
 });
