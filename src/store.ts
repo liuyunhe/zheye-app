@@ -135,6 +135,9 @@ const store = createStore<GlobalDataProps>({
       state.posts = [rawData.data]
       console.log(state.posts)
     },
+    deletePost(state, { data }) {
+      state.posts = state.posts.filter(post => post._id !== data._id)
+    },
     updatePost(state, { data }) {
       state.posts = state.posts.map(post => {
         if (post._id === data._id) {
@@ -180,6 +183,9 @@ const store = createStore<GlobalDataProps>({
     },
     createPost({ commit }, payLoad) {
       return postAndCommit(`/posts`, 'createPost', commit, payLoad)
+    },
+    deletePost({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'DELETE' })
     },
 
   }
