@@ -1,4 +1,12 @@
 <template>
+  <modal
+    :visible="modalIsVisible"
+    title="删除文章"
+    @modal-on-close="modalIsVisible = false"
+    @modal-on-confirm="hideAndDelete"
+  >
+    <p>确定要删除这篇文章吗？</p>
+  </modal>
   <div class="post-detail-page">
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
       <img
@@ -43,17 +51,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from "vue";
+import { defineComponent, onMounted, computed, ref } from "vue";
 import MarkdownIt from "markdown-it";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { GlobalDataProps, PostProps, ImageProps, Userprops } from "../store";
+import { GlobalDataProps, PostProps, ImageProps, Userprops, ResponseType } from "../store";
 import UserProfile from "../components/UserProfile.vue";
+import Modal from "@/components/Modal.vue";
+import createMessage from "@/components/createMessage";
 
 export default defineComponent({
   name: "post-detail",
   components: {
     UserProfile,
+    Modal,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -61,6 +72,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
+    const modalIsVisible = ref(false);
     const currentId = route.params.id;
     const md = new MarkdownIt();
 
@@ -69,6 +81,7 @@ export default defineComponent({
       store.dispatch("fetchPost", currentId);
     });
 
+    //  拿到当前文章
     const currentPost = computed<PostProps>(() =>
       store.getters.getCurrentPost(currentId)
     );
@@ -101,11 +114,28 @@ export default defineComponent({
       }
     });
 
+    const hideAndDelete = () => {
+      modalIsVisible.value = false;
+      store
+        .dispatch("deletePost", currentId)
+        .then((rawData: ResponseType<PostProps>) => {
+          createMessage("删除成功，2秒后跳转到专栏首页", "success", 2000);
+          setTimeout(() => {
+            router.push({
+              name: "column",
+              params: { id: rawData.data.column },
+            });
+          }, 2000);
+        });
+    };
+
     return {
       currentPost,
       currentImageUrl,
       currentHTML,
       showEditArea,
+      modalIsVisible,
+      hideAndDelete,
     };
   },
 });
