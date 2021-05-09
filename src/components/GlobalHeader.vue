@@ -22,6 +22,11 @@
                 >新建文章</router-link
               ></dropdown-item
             >
+            <dropdown-item
+              ><router-link class="dropdown-item" :to="`/column/${columnId}`"
+                >我的专栏</router-link
+              ></dropdown-item
+            >
             <dropdown-item disabled
               ><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
             >
@@ -36,8 +41,8 @@
 </template>
 
 <script lang="ts">
-import {  Userprops } from "@/store";
-import { defineComponent, PropType } from "vue";
+import { Userprops } from "@/store";
+import { computed, defineComponent, PropType } from "vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownItem from "./DropdownItem.vue";
 
@@ -50,9 +55,11 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
-    
-    return {};
+  setup(props) {
+    const columnId = computed(() => props.user.column);
+    return {
+      columnId
+    };
   },
 });
 </script>
