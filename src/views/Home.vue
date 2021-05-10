@@ -6,7 +6,11 @@
           <img src="../assets/callout.svg" alt="callout" class="w-50" />
           <h2 class="font-weight-light">随心写作，自由表达</h2>
           <p>
-            <a href="#" class="btn btn-primary my-2">开始写文章</a>
+            <router-link to="/create">
+              <a href="#" class="btn btn-primary my-2"
+                >开始写文章</a
+              ></router-link
+            >
           </p>
         </div>
       </div>
@@ -41,10 +45,11 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>();
     const list = computed(() => store.getters.getColumns);
     const total = computed(() => store.state.columns.total);
+    const currentPage = computed(() => store.state.columns.currentPage);
 
     const { loadMorePage, isLastPage } = useLoadMore("fetchColumns", total, {
       pageSize: 3,
-      currentPage: 2,
+      currentPage: currentPage.value ? currentPage.value + 1 : 2,
     });
 
     onMounted(() => {
