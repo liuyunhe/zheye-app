@@ -17,6 +17,15 @@
       </div>
     </div>
     <post-list :posts="list"></post-list>
+    <div class="row">
+      <button
+        class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+        @click="loadMorePage"
+        v-if="!isLastPage"
+      >
+        加载更多
+      </button>
+    </div>
   </div>
 </template>
 
@@ -27,6 +36,7 @@ import PostList from "@/components/PostList.vue";
 import { useStore } from "vuex";
 import { ColumnProps, GlobalDataProps } from "../store";
 import { generateFitUrl } from "@/helper";
+import useLoadMore from "@/hooks/useLoadMore";
 
 export default defineComponent({
   name: "ColumnDetail",
@@ -35,24 +45,44 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
 
-    const currentId = route.params.id;
+    const currentId = route.params.id as string;
+    const total = computed(() =>
+      store.state.posts.loadedColumns[currentId]
+        ? (store.state.posts.loadedColumns[currentId].total as number)
+        : 0
+    );
+    const currentPage = computed(() =>
+      store.state.posts.loadedColumns[currentId]
+        ? store.state.posts.loadedColumns[currentId].currentPage
+        : 0
+    );
 
     onMounted(() => {
       store.dispatch("fetchColumn", currentId);
-      store.dispatch("fetchPosts", currentId);
+      store.dispatch("fetchPosts", { cid: currentId, pageSize: 5 });
     });
 
     const column = computed(() => {
-      const selectColumn = store.getters.getColumnById(currentId) as ColumnProps;
+      const selectColumn = store.getters.getColumnById(
+        currentId
+      ) as ColumnProps;
       if (selectColumn) {
         generateFitUrl(selectColumn, 100, 100);
       }
-      return selectColumn
+      return selectColumn;
     });
     const list = computed(() => store.getters.getPostById(currentId));
+
+    const { loadMorePage, isLastPage } = useLoadMore("fetchPosts", total, {
+      pageSize: 5,
+      currentPage: currentPage.value ? currentPage.value + 1 : 2,
+      cid: currentId,
+    });
     return {
       column,
       list,
+      loadMorePage,
+      isLastPage,
     };
   },
 });
