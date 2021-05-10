@@ -34,3 +34,17 @@ export function beforeUploadCheck(file: File, condition: CheckCondition) {
     error
   }
 }
+
+// eslint-disable-next-line
+export const arrToObj = <T extends { _id?: string }>(arr: T[]) => {
+  return arr.reduce((prev, current) => {
+    if (current._id) {
+      prev[current._id] = current
+    }
+    return prev
+  }, {} as { [key: string]: T })
+}
+
+export const objToArr = <T>(obj: { [key: string]: T }): T[] => {
+  return Object.values(obj)
+}
