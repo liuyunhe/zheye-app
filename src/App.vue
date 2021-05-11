@@ -3,7 +3,7 @@
   <loader
     v-if="isLoading"
     text="拼命加载中..."
-    background="rgba(0,0,0,0.8)"
+    background="rgba(255,255,255,0.8)"
   ></loader>
   <!-- <message
     :type="'error'"
@@ -12,7 +12,9 @@
   ></message> -->
   <div class="container">
     <router-view></router-view>
-    <footer class="text-center py-4 text-secondary bg-light mt-6">
+    
+  </div>
+  <footer class="text-center py-4 text-secondary bg-light mt-6 mt-auto">
       <small>
         <ul class="list-inline mb-0">
           <li class="list-inline-item">© 2021 者也专栏</li>
@@ -23,7 +25,6 @@
         </ul>
       </small>
     </footer>
-  </div>
 </template>
 
 <script lang="ts">

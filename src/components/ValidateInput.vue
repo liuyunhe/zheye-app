@@ -1,5 +1,5 @@
 <template>
-  <div class="validate-input-container pb-3">
+  <div class="validate-input-container" style="height:60px">
     <!-- <input
       v-if="tag !== 'textarea'"
       class="form-control"
