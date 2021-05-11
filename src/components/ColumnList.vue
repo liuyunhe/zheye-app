@@ -8,8 +8,8 @@
             :src="column.avatar && column.avatar.fitUrl"
             :alt="column.title"
           />
-          <h5 class="card-title">{{ column.title }}</h5>
-          <p class="card-text text-left">{{ column.description }}</p>
+          <h5 class="card-title text-truncate">{{ column.title }}</h5>
+          <p class="card-text text-left description">{{ column.description }}</p>
           <router-link
             :to="`/column/${column._id}`"
             class="btn btn-outline-primary"
@@ -52,5 +52,15 @@ export default defineComponent({
 .card-body img {
   width: 50px;
   height: 50px;
+}
+.description {
+    line-height: 20px;
+    height: 60px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>

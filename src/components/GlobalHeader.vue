@@ -30,8 +30,10 @@
             <dropdown-item disabled
               ><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
             >
-            <dropdown-item
-              ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
+            <dropdown-item v-if="isLogin" @click.prevent="onLogout"
+              ><a class="dropdown-item" href="#" 
+                >退出登录</a
+              ></dropdown-item
             >
           </dropdown>
         </li>
@@ -41,10 +43,12 @@
 </template>
 
 <script lang="ts">
-import { Userprops } from "@/store";
+import { GlobalDataProps, Userprops } from "@/store";
+import { useStore } from "vuex";
 import { computed, defineComponent, PropType } from "vue";
 import Dropdown from "./Dropdown.vue";
 import DropdownItem from "./DropdownItem.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "GlobalHeader",
@@ -56,9 +60,18 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore<GlobalDataProps>();
+    const router = useRouter();
     const columnId = computed(() => props.user.column);
+    const isLogin = computed(() => store.state.user.isLogin);
+    const onLogout = () => {
+      store.commit("logout");
+      router.push("/login");
+    };
     return {
-      columnId
+      columnId,
+      onLogout,
+      isLogin,
     };
   },
 });

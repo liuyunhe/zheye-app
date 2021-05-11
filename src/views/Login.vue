@@ -2,7 +2,7 @@
   <div class="login-page mx-auto p-3 w-330">
     <h5 class="my-4 text-center">登录到者也</h5>
     <validate-form @form-submit="onFormSubmit">
-      <div class="mb-3">
+      <div class="mb-1">
         <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
         <validate-input
           type="text"
@@ -11,7 +11,7 @@
           placeholder="请输入邮箱地址"
         ></validate-input>
       </div>
-      <div class="mb-3">
+      <div class="mb-1">
         <label for="exampleInputPassword1" class="form-label">密码</label>
         <validate-input
           type="password"
