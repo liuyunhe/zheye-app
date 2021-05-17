@@ -1,29 +1,8 @@
-import { createApp, nextTick } from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from "./router";
 import store from "./store";
-import axios from 'axios'
-axios.defaults.baseURL = '/api/'
-axios.interceptors.request.use(config => {
-  store.commit('setLoading', true)
-  store.commit('setError', { status: false })
-  return config
-})
-axios.interceptors.response.use(
-  config => {
-    nextTick(() => {
-      store.commit('setLoading', false)
-    })
-    return config
-  },
-  e => {
-    const { error } = e.response.data
-    store.commit('setError', { status: true, message: error })
-    nextTick(() => {
-      store.commit('setLoading', false)
-    })
-    return Promise.reject(error)
-  })
+import "./http";
 
 const app = createApp(App)
 app.use(router)
