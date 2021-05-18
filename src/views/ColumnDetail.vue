@@ -45,38 +45,38 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
 
-    const currentId = route.params.id as string;
+    const currentId = computed(() => route.params.id as string);
     const total = computed(() =>
-      store.state.posts.loadedColumns[currentId]
-        ? (store.state.posts.loadedColumns[currentId].total as number)
+      store.state.posts.loadedColumns[currentId.value]
+        ? (store.state.posts.loadedColumns[currentId.value].total as number)
         : 0
     );
     const currentPage = computed(() =>
-      store.state.posts.loadedColumns[currentId]
-        ? store.state.posts.loadedColumns[currentId].currentPage
+      store.state.posts.loadedColumns[currentId.value]
+        ? store.state.posts.loadedColumns[currentId.value].currentPage
         : 0
     );
-
+  
     onMounted(() => {
-      store.dispatch("fetchColumn", currentId);
-      store.dispatch("fetchPosts", { cid: currentId, pageSize: 5 });
+      store.dispatch("fetchColumn", currentId.value);
+      store.dispatch("fetchPosts", { cid: currentId.value, pageSize: 5 });
     });
 
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(
-        currentId
+        currentId.value
       ) as ColumnProps;
       if (selectColumn) {
         generateFitUrl(selectColumn, 100, 100);
       }
       return selectColumn;
     });
-    const list = computed(() => store.getters.getPostById(currentId));
+    const list = computed(() => store.getters.getPostById(currentId.value));
 
     const { loadMorePage, isLastPage } = useLoadMore("fetchPosts", total, {
       pageSize: 5,
       currentPage: currentPage.value ? currentPage.value + 1 : 2,
-      cid: currentId,
+      cid: currentId.value,
     });
     return {
       column,
