@@ -2,7 +2,7 @@
   <div class="signup-page mx-auto p-3 w-330">
     <h5 class="my-4 text-center">注册者也账户</h5>
     <validate-form @form-submit="onFormSubmit">
-      <div class="mb-3">
+      <div class="mb-1">
         <label class="form-label">邮箱地址</label>
         <validate-input
           :rules="emailRules" v-model="formData.email"
@@ -10,7 +10,7 @@
           type="text"
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-1">
         <label class="form-label">昵称</label>
         <validate-input
           :rules="nameRules" v-model="formData.nickName"
@@ -18,7 +18,7 @@
           type="text"
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-1">
         <label class="form-label">密码</label>
         <validate-input
           type="password"
@@ -27,7 +27,7 @@
           v-model="formData.password"
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-1">
         <label class="form-label">重复密码</label>
         <validate-input
           type="password"
@@ -36,6 +36,7 @@
           v-model="formData.repeatPassword"
         />
       </div>
+      <div class="form-text"><a href="/login" class="">已经有账户了？去登录</a></div>
       <template #submit>
         <button type="submit" class="btn btn-primary btn-block btn-large">注册新用户</button>
       </template>
@@ -117,5 +118,8 @@ export default defineComponent({
 <style>
 .w-330 {
   max-width: 330px;
+}
+.form-text{
+  margin-bottom: 20px;
 }
 </style>

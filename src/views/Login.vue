@@ -20,6 +20,7 @@
           placeholder="请输入密码"
         ></validate-input>
       </div>
+      <div class="form-text"><a href="/signup" class="">还没有账户？去注册一个新的吧！</a></div>
       <template #submit>
         <button type="submit" class="btn btn-primary">提交</button>
       </template>
@@ -89,4 +90,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.form-text{
+  margin-bottom: 20px;
+}
 </style>
