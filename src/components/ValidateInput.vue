@@ -1,5 +1,5 @@
 <template>
-  <div class="validate-input-container" style="height:60px">
+  <div class="validate-input-container" :class="{ h60: tag !== 'textarea' }">
     <!-- <input
       v-if="tag !== 'textarea'"
       class="form-control"
@@ -57,12 +57,12 @@ export default defineComponent({
     const inputRef = reactive({
       //  直接赋值modelValue
       val: computed({
-        get:()=>{
-          return props.modelValue || ''
+        get: () => {
+          return props.modelValue || "";
         },
-        set:val=>{
+        set: (val) => {
           context.emit("update:modelValue", val);
-        }
+        },
       }),
       error: false,
       message: "",
@@ -120,4 +120,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.h60{
+  height: 60px;
+}
 </style>
