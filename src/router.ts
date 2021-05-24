@@ -6,6 +6,7 @@ import Login from "./views/Login.vue";
 import ColumnDetail from "./views/ColumnDetail.vue";
 import Create from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
+import Edit from './views/Edit.vue'
 import PostDetail from './views/PostDetail.vue'
 
 const routerHistory = createWebHistory()
@@ -42,6 +43,14 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: Signup,
+    },
+    {
+      path: '/edit',
+      name: 'edit',
+      component: Edit,
+      meta: {
+        requiredLogin: true
+      }
     },
     {
       path: '/posts/:id',

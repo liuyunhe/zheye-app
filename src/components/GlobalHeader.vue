@@ -27,8 +27,10 @@
                 >我的专栏</router-link
               ></dropdown-item
             >
-            <dropdown-item disabled
-              ><a class="dropdown-item" href="#">编辑资料</a></dropdown-item
+            <dropdown-item 
+              ><router-link class="dropdown-item" to="/edit"
+                >编辑资料</router-link
+              ></dropdown-item
             >
             <dropdown-item v-if="isLogin" @click.prevent="onLogout"
               ><a class="dropdown-item" href="#" 

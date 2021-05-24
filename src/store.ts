@@ -178,6 +178,9 @@ const store = createStore<GlobalDataProps>({
     updatePost(state, { data }) {
       state.posts.data[data._id] = data
     },
+    updateUser(state, { data }) {
+      state.user = { ...data, isLogin: true }
+    },
     setLoading(state, status) {
       state.loading = status
     },
@@ -228,6 +231,12 @@ const store = createStore<GlobalDataProps>({
     },
     updatePost({ commit }, { id, payLoad }) {
       return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, { method: 'PATCH', data: payLoad })
+    },
+    updateUser({ commit }, { id, payLoad }) {
+      return asyncAndCommit(`/user/${id}`, 'updateUser', commit, { method: 'PATCH', data: payLoad })
+    },
+    updateColum({ commit }, { id, payLoad }) {
+      return asyncAndCommit(`/columns/${id}`, 'fetchColumn', commit, { method: 'PATCH', data: payLoad })
     },
     createPost({ commit }, payLoad) {
       return postAndCommit(`/posts`, 'createPost', commit, payLoad)
