@@ -12,19 +12,27 @@
   ></message> -->
   <div class="container">
     <router-view></router-view>
-    
   </div>
   <footer class="text-center py-4 text-secondary bg-light mt-6 mt-auto">
-      <small>
-        <ul class="list-inline mb-0">
-          <li class="list-inline-item">© 2021 者也专栏</li>
-          <li class="list-inline-item">课程</li>
-          <li class="list-inline-item">文档</li>
-          <li class="list-inline-item">联系</li>
-          <li class="list-inline-item">更多</li>
-        </ul>
-      </small>
-    </footer>
+    <small>
+      <ul class="list-inline mb-0">
+        <li class="list-inline-item">
+          © 者也专栏
+        </li>
+        <li class="list-inline-item">
+          <a href="http://docs.vikingship.xyz/" target="_blank">文档</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="http://api.vikingship.xyz/" target="_blank">API 在线调试</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="http://showcase.vikingship.xyz/" target="_blank"
+            >组件库演示</a
+          >
+        </li>
+      </ul>
+    </small>
+  </footer>
 </template>
 
 <script lang="ts">
