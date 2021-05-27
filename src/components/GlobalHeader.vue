@@ -22,7 +22,7 @@
                 >新建文章</router-link
               ></dropdown-item
             >
-            <dropdown-item
+            <dropdown-item @click="reloadPage"
               ><router-link class="dropdown-item" :to="`/column/${columnId}`"
                 >我的专栏</router-link
               ></dropdown-item
@@ -61,7 +61,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits:['reload'],
+  setup(props,context) {
     const store = useStore<GlobalDataProps>();
     const router = useRouter();
     const columnId = computed(() => props.user.column);
@@ -70,10 +71,14 @@ export default defineComponent({
       store.commit("logout");
       router.push("/login");
     };
+    const reloadPage = () => {
+      context.emit('reload')
+    }
     return {
       columnId,
       onLogout,
       isLogin,
+      reloadPage
     };
   },
 });

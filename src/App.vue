@@ -1,5 +1,5 @@
 <template>
-  <global-header :user="user"></global-header>
+  <global-header :user="user" @reload="reload"></global-header>
   <loader
     v-if="isLoading"
     text="拼命加载中..."
@@ -11,7 +11,7 @@
     v-if="error.status"
   ></message> -->
   <div class="container">
-    <router-view></router-view>
+    <router-view v-if="isRouterActive"></router-view>
   </div>
   <footer class="text-center py-4 text-secondary bg-light mt-6 mt-auto">
     <small>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watch } from "vue";
+import { computed, defineComponent, nextTick, ref, watch } from "vue";
 import { useStore } from "vuex";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -58,6 +58,13 @@ export default defineComponent({
     const currentUser = computed(() => store.state.user);
     const isLoading = computed(() => store.state.loading);
     const error = computed(() => store.state.error);
+    const isRouterActive = ref(true)
+    const reload = () => {
+      isRouterActive.value = false
+      nextTick(()=>{
+        isRouterActive.value = true
+      })
+    }
 
     watch(
       () => error.value.status,
@@ -72,6 +79,8 @@ export default defineComponent({
       user: currentUser,
       isLoading,
       error,
+      reload,
+      isRouterActive
     };
   },
 });
