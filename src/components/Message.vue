@@ -30,11 +30,11 @@ export default defineComponent({
       default: "default",
     },
   },
-  setup(props, constext) {
+  setup(props, context) {
     const isVisible = ref(true);
     const hide = () => {
       isVisible.value = false;
-      constext.emit("close-message", true);
+      context.emit("close-message", true);
     };
     const classObject = {
       "alert-success": props.type === "success",
