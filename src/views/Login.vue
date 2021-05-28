@@ -20,7 +20,9 @@
           placeholder="请输入密码"
         ></validate-input>
       </div>
-      <div class="form-text"><a href="/signup" class="">还没有账户？去注册一个新的吧！</a></div>
+      <div class="form-text">
+        <a href="/signup" class="">还没有账户？去注册一个新的吧！</a>
+      </div>
       <template #submit>
         <button type="submit" class="btn btn-primary">提交</button>
       </template>
@@ -29,68 +31,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
-import ValidateForm from "../components/ValidateForm.vue";
-import { GlobalDataProps } from "@/store";
-import createMessage from "@/components/createMessage";
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
+import ValidateForm from '../components/ValidateForm.vue'
+import { GlobalDataProps } from '@/store'
+import createMessage from '@/components/createMessage'
 
 export default defineComponent({
-  name: "Login",
+  name: 'Login',
   components: {
     ValidateInput,
-    ValidateForm,
+    ValidateForm
   },
   setup() {
-    const router = useRouter();
-    const store = useStore<GlobalDataProps>();
+    const router = useRouter()
+    const store = useStore<GlobalDataProps>()
 
-    const emailVal = ref("");
-    const passwordVal = ref("");
+    const emailVal = ref('')
+    const passwordVal = ref('')
     const emailRules: RulesProp = [
-      { type: "required", message: "电子邮箱地址不能为空!" },
-      { type: "email", message: "请输入正确的电子邮箱格式!" },
-    ];
+      { type: 'required', message: '电子邮箱地址不能为空!' },
+      { type: 'email', message: '请输入正确的电子邮箱格式!' }
+    ]
     const passwordRules: RulesProp = [
-      { type: "required", message: "密码不能为空" },
-    ];
+      { type: 'required', message: '密码不能为空' }
+    ]
 
     const onFormSubmit = (result: boolean) => {
-      console.log("result", result);
+      console.log('result', result)
       if (result) {
         const payLoad = {
           email: emailVal.value,
-          password: passwordVal.value,
-        };
+          password: passwordVal.value
+        }
         store
-          .dispatch("loginAndFetch", payLoad)
+          .dispatch('loginAndFetch', payLoad)
           .then(() => {
-            createMessage("登录成功!2秒后跳转首页", "success");
+            createMessage('登录成功!2秒后跳转首页', 'success')
             setTimeout(() => {
-              router.push(`/`);
-            }, 2000);
+              router.push(`/`)
+            }, 2000)
           })
           .catch((e) => {
-            console.log(e);
-          });
+            console.log(e)
+          })
       }
-    };
+    }
 
     return {
       emailVal,
       emailRules,
       passwordVal,
       passwordRules,
-      onFormSubmit,
-    };
-  },
-});
+      onFormSubmit
+    }
+  }
+})
 </script>
 
 <style scoped>
-.form-text{
+.form-text {
   margin-bottom: 20px;
 }
 </style>

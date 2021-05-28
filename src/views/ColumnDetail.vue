@@ -30,63 +30,62 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import PostList from "@/components/PostList.vue";
-import { useStore } from "vuex";
-import { ColumnProps, GlobalDataProps } from "../store";
-import { generateFitUrl } from "@/helper";
-import useLoadMore from "@/hooks/useLoadMore";
+import { computed, defineComponent, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import PostList from '@/components/PostList.vue'
+import { useStore } from 'vuex'
+import { ColumnProps, GlobalDataProps } from '../store'
+import { generateFitUrl } from '@/helper'
+import useLoadMore from '@/hooks/useLoadMore'
 
 export default defineComponent({
-  name: "ColumnDetail",
+  name: 'ColumnDetail',
   components: { PostList },
   setup() {
-    const route = useRoute();
-    const store = useStore<GlobalDataProps>();
+    const route = useRoute()
+    const store = useStore<GlobalDataProps>()
 
-    const currentId = computed(() => route.params.id as string);
+    const currentId = computed(() => route.params.id as string)
     const total = computed(() =>
       store.state.posts.loadedColumns[currentId.value]
         ? (store.state.posts.loadedColumns[currentId.value].total as number)
         : 0
-    );
+    )
     const currentPage = computed(() =>
       store.state.posts.loadedColumns[currentId.value]
         ? store.state.posts.loadedColumns[currentId.value].currentPage
         : 0
-    );
-  
+    )
+
     onMounted(() => {
-      store.dispatch("fetchColumn", currentId.value);
-      store.dispatch("fetchPosts", { cid: currentId.value, pageSize: 5 });
-    });
+      store.dispatch('fetchColumn', currentId.value)
+      store.dispatch('fetchPosts', { cid: currentId.value, pageSize: 5 })
+    })
 
     const column = computed(() => {
       const selectColumn = store.getters.getColumnById(
         currentId.value
-      ) as ColumnProps;
+      ) as ColumnProps
       if (selectColumn) {
-        generateFitUrl(selectColumn, 100, 100);
+        generateFitUrl(selectColumn, 100, 100)
       }
-      return selectColumn;
-    });
-    const list = computed(() => store.getters.getPostById(currentId.value));
+      return selectColumn
+    })
+    const list = computed(() => store.getters.getPostById(currentId.value))
 
-    const { loadMorePage, isLastPage } = useLoadMore("fetchPosts", total, {
+    const { loadMorePage, isLastPage } = useLoadMore('fetchPosts', total, {
       pageSize: 5,
       currentPage: currentPage.value ? currentPage.value + 1 : 2,
-      cid: currentId.value,
-    });
+      cid: currentId.value
+    })
     return {
       column,
       list,
       loadMorePage,
-      isLastPage,
-    };
-  },
-});
+      isLastPage
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

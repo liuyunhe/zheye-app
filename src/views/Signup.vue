@@ -5,7 +5,8 @@
       <div class="mb-1">
         <label class="form-label">邮箱地址</label>
         <validate-input
-          :rules="emailRules" v-model="formData.email"
+          :rules="emailRules"
+          v-model="formData.email"
           placeholder="请输入邮箱地址"
           type="text"
         />
@@ -13,7 +14,8 @@
       <div class="mb-1">
         <label class="form-label">昵称</label>
         <validate-input
-          :rules="nameRules" v-model="formData.nickName"
+          :rules="nameRules"
+          v-model="formData.nickName"
           placeholder="请输入昵称"
           type="text"
         />
@@ -36,9 +38,13 @@
           v-model="formData.repeatPassword"
         />
       </div>
-      <div class="form-text"><a href="/login" class="">已经有账户了？去登录</a></div>
+      <div class="form-text">
+        <a href="/login" class="">已经有账户了？去登录</a>
+      </div>
       <template #submit>
-        <button type="submit" class="btn btn-primary btn-block btn-large">注册新用户</button>
+        <button type="submit" class="btn btn-primary btn-block btn-large">
+          注册新用户
+        </button>
       </template>
     </validate-form>
   </div>
@@ -70,9 +76,7 @@ export default defineComponent({
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    const nameRules: RulesProp = [
-      { type: 'required', message: '昵称不能为空' }
-    ]
+    const nameRules: RulesProp = [{ type: 'required', message: '昵称不能为空' }]
     const passwordRules: RulesProp = [
       { type: 'required', message: '密码不能为空' }
     ]
@@ -93,14 +97,17 @@ export default defineComponent({
           password: formData.password,
           nickName: formData.nickName
         }
-        axios.post('/users', payload).then(() => {
-          createMessage('注册成功 正在跳转登录页面', 'success')
-          setTimeout(() => {
-            router.push('/login')
-          }, 2000)
-        }).catch(e => {
-          console.log(e)
-        })
+        axios
+          .post('/users', payload)
+          .then(() => {
+            createMessage('注册成功 正在跳转登录页面', 'success')
+            setTimeout(() => {
+              router.push('/login')
+            }, 2000)
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       }
     }
     return {
@@ -119,7 +126,7 @@ export default defineComponent({
 .w-330 {
   max-width: 330px;
 }
-.form-text{
+.form-text {
   margin-bottom: 20px;
 }
 </style>

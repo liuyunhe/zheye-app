@@ -51,83 +51,89 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed, ref } from "vue";
-import MarkdownIt from "markdown-it";
-import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
-import { GlobalDataProps, PostProps, ImageProps, Userprops, ResponseType } from "../store";
-import UserProfile from "../components/UserProfile.vue";
-import Modal from "@/components/Modal.vue";
-import createMessage from "@/components/createMessage";
+import { defineComponent, onMounted, computed, ref } from 'vue'
+import MarkdownIt from 'markdown-it'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  GlobalDataProps,
+  PostProps,
+  ImageProps,
+  Userprops,
+  ResponseType
+} from '../store'
+import UserProfile from '../components/UserProfile.vue'
+import Modal from '@/components/Modal.vue'
+import createMessage from '@/components/createMessage'
 
 export default defineComponent({
-  name: "post-detail",
+  name: 'post-detail',
   components: {
     UserProfile,
-    Modal,
+    Modal
   },
   setup() {
-    const store = useStore<GlobalDataProps>();
+    const store = useStore<GlobalDataProps>()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const router = useRouter();
-    const route = useRoute();
+    const router = useRouter()
+    const route = useRoute()
 
-    const modalIsVisible = ref(false);
-    const currentId = route.params.id;
-    const md = new MarkdownIt();
+    const modalIsVisible = ref(false)
+    const currentId = route.params.id
+    const md = new MarkdownIt()
 
     onMounted(() => {
-      console.log(store.state.posts);
-      store.dispatch("fetchPost", currentId);
-    });
+      console.log(store.state.posts)
+      store.dispatch('fetchPost', currentId)
+    })
 
     //  拿到当前文章
     const currentPost = computed<PostProps>(() =>
       store.getters.getCurrentPost(currentId)
-    );
+    )
 
     const currentHTML = computed(() => {
-      const { content, isHTML } = currentPost.value;
+      const { content, isHTML } = currentPost.value
       if (currentPost.value && content) {
-        return isHTML ? content : md.render(content);
+        return isHTML ? content : md.render(content)
       } else {
-        return null;
+        return null
       }
-    });
+    })
 
     const currentImageUrl = computed(() => {
       if (currentPost.value && currentPost.value.image) {
-        const { image } = currentPost.value;
-        return (image as ImageProps).url + "?x-oss-process=image/resize,w_850";
+        const { image } = currentPost.value
+        return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
       } else {
-        return null;
+        return null
       }
-    });
+    })
 
     const showEditArea = computed(() => {
-      const { isLogin, _id } = store.state.user;
+      const { isLogin, _id } = store.state.user
       if (currentPost.value && currentPost.value.author && isLogin) {
-        const postAuthor = currentPost.value.author as Userprops;
-        return postAuthor._id === _id;
+        const postAuthor = currentPost.value.author as Userprops
+        return postAuthor._id === _id
       } else {
-        return false;
+        return false
       }
-    });
+    })
 
     const hideAndDelete = () => {
-      modalIsVisible.value = false;
+      modalIsVisible.value = false
       store
-        .dispatch("deletePost", currentId)
+        .dispatch('deletePost', currentId)
         .then((rawData: ResponseType<PostProps>) => {
-          createMessage("删除成功，2秒后跳转到专栏首页", "success", 2000);
+          createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
           setTimeout(() => {
             router.push({
-              name: "column",
-              params: { id: rawData.data.column },
-            });
-          }, 2000);
-        });
-    };
+              name: 'column',
+              params: { id: rawData.data.column }
+            })
+          }, 2000)
+        })
+    }
 
     return {
       currentPost,
@@ -135,11 +141,10 @@ export default defineComponent({
       currentHTML,
       showEditArea,
       modalIsVisible,
-      hideAndDelete,
-    };
-  },
-});
+      hideAndDelete
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

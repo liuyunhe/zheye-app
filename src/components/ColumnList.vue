@@ -9,7 +9,9 @@
             :alt="column.title"
           />
           <h5 class="card-title text-truncate">{{ column.title }}</h5>
-          <p class="card-text text-left description">{{ column.description }}</p>
+          <p class="card-text text-left description">
+            {{ column.description }}
+          </p>
           <router-link
             :to="`/column/${column._id}`"
             class="btn btn-outline-primary"
@@ -22,30 +24,30 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
-import { ColumnProps } from "../store";
-import { generateFitUrl } from "../helper";
+import { computed, defineComponent, PropType } from 'vue'
+import { ColumnProps } from '../store'
+import { generateFitUrl } from '../helper'
 
 export default defineComponent({
-  name: "ColumnList",
+  name: 'ColumnList',
   props: {
     list: {
       type: Array as PropType<ColumnProps[]>,
-      required: true,
-    },
+      required: true
+    }
   },
   setup(props) {
     const columnList = computed(() => {
       return props.list.map((column) => {
-        generateFitUrl(column, 50, 50);
-        return column;
-      });
-    });
+        generateFitUrl(column, 50, 50)
+        return column
+      })
+    })
     return {
-      columnList,   
-    };
-  },
-});
+      columnList
+    }
+  }
+})
 </script>
 
 <style scoped>
@@ -54,13 +56,13 @@ export default defineComponent({
   height: 50px;
 }
 .description {
-    line-height: 20px;
-    height: 60px;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
-    display: -webkit-box;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  line-height: 20px;
+  height: 60px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
