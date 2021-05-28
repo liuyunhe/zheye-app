@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import store from './store';
-import axios from "axios";
-import Home from "./views/Home.vue";
-import Login from "./views/Login.vue";
-import ColumnDetail from "./views/ColumnDetail.vue";
+import store from './store'
+import axios from 'axios'
+import Home from './views/Home.vue'
+import Login from './views/Login.vue'
+import ColumnDetail from './views/ColumnDetail.vue'
 import Create from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
 import Edit from './views/Edit.vue'
@@ -42,7 +42,7 @@ const router = createRouter({
     {
       path: '/signup',
       name: 'signup',
-      component: Signup,
+      component: Signup
     },
     {
       path: '/edit',
@@ -61,35 +61,36 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const {user,token} = store.state
-  const {requiredLogin,redirectAlreadyLogin} = to.meta
-  if(!user.isLogin) {
-    if(token){
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${token}`;
-      store.dispatch("fetchCurrentUser").then(()=>{
-        if(redirectAlreadyLogin) {
-          next('/')
-        }else{
-          next()
-        }
-      }).catch(e=>{
-        console.error(e)
-        store.commit('logout')
+  const { user, token } = store.state
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+  if (!user.isLogin) {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      store
+        .dispatch('fetchCurrentUser')
+        .then(() => {
+          if (redirectAlreadyLogin) {
+            next('/')
+          } else {
+            next()
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+          store.commit('logout')
+          next('/login')
+        })
+    } else {
+      if (requiredLogin) {
         next('/login')
-      });
-    }else{
-      if(requiredLogin){
-        next('/login')
-      }else{
+      } else {
         next()
       }
     }
-  }else{
-    if(redirectAlreadyLogin){
+  } else {
+    if (redirectAlreadyLogin) {
       next('/')
-    }else{
+    } else {
       next()
     }
   }

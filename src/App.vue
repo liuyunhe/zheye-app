@@ -36,32 +36,32 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref, watch } from "vue";
-import { useStore } from "vuex";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { computed, defineComponent, nextTick, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
-import { GlobalDataProps } from "./store";
-import GlobalHeader from "./components/GlobalHeader.vue";
-import Loader from "./components/Loader.vue";
-import createMessage from "./components/createMessage";
+import { GlobalDataProps } from './store'
+import GlobalHeader from './components/GlobalHeader.vue'
+import Loader from './components/Loader.vue'
+import createMessage from './components/createMessage'
 // import Message from "./components/Message.vue";
 
 export default defineComponent({
-  name: "App",
+  name: 'App',
   components: {
     GlobalHeader,
-    Loader,
+    Loader
     // Message,
   },
   setup() {
-    const store = useStore<GlobalDataProps>();
-    const currentUser = computed(() => store.state.user);
-    const isLoading = computed(() => store.state.loading);
-    const error = computed(() => store.state.error);
+    const store = useStore<GlobalDataProps>()
+    const currentUser = computed(() => store.state.user)
+    const isLoading = computed(() => store.state.loading)
+    const error = computed(() => store.state.error)
     const isRouterActive = ref(true)
     const reload = () => {
       isRouterActive.value = false
-      nextTick(()=>{
+      nextTick(() => {
         isRouterActive.value = true
       })
     }
@@ -69,21 +69,21 @@ export default defineComponent({
     watch(
       () => error.value.status,
       () => {
-        const { status, message } = error.value;
+        const { status, message } = error.value
         if (status && message) {
-          createMessage(message, "error");
+          createMessage(message, 'error')
         }
       }
-    );
+    )
     return {
       user: currentUser,
       isLoading,
       error,
       reload,
       isRouterActive
-    };
-  },
-});
+    }
+  }
+})
 </script>
 
 <style>

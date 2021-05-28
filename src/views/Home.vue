@@ -30,40 +30,39 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "vue";
-import { useStore } from "vuex";
-import { GlobalDataProps } from "../store";
-import ColumnList from "../components/ColumnList.vue";
-import useLoadMore from "../hooks/useLoadMore";
+import { computed, defineComponent, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
+import ColumnList from '../components/ColumnList.vue'
+import useLoadMore from '../hooks/useLoadMore'
 
 export default defineComponent({
-  name: "Home",
+  name: 'Home',
   components: {
-    ColumnList,
+    ColumnList
   },
   setup() {
-    const store = useStore<GlobalDataProps>();
-    const list = computed(() => store.getters.getColumns);
-    const total = computed(() => store.state.columns.total);
-    const currentPage = computed(() => store.state.columns.currentPage);
+    const store = useStore<GlobalDataProps>()
+    const list = computed(() => store.getters.getColumns)
+    const total = computed(() => store.state.columns.total)
+    const currentPage = computed(() => store.state.columns.currentPage)
 
-    const { loadMorePage, isLastPage } = useLoadMore("fetchColumns", total, {
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns', total, {
       pageSize: 3,
-      currentPage: currentPage.value ? currentPage.value + 1 : 2,
-    });
+      currentPage: currentPage.value ? currentPage.value + 1 : 2
+    })
 
     onMounted(() => {
-      store.dispatch("fetchColumns", { pageSize: 3 });
-    });
+      store.dispatch('fetchColumns', { pageSize: 3 })
+    })
 
     return {
       list,
       loadMorePage,
-      isLastPage,
-    };
-  },
-});
+      isLastPage
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

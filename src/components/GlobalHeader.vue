@@ -27,15 +27,13 @@
                 >我的专栏</router-link
               ></dropdown-item
             >
-            <dropdown-item 
+            <dropdown-item
               ><router-link class="dropdown-item" to="/edit"
                 >编辑资料</router-link
               ></dropdown-item
             >
             <dropdown-item v-if="isLogin" @click.prevent="onLogout"
-              ><a class="dropdown-item" href="#" 
-                >退出登录</a
-              ></dropdown-item
+              ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
             >
           </dropdown>
         </li>
@@ -45,32 +43,32 @@
 </template>
 
 <script lang="ts">
-import { GlobalDataProps, Userprops } from "@/store";
-import { useStore } from "vuex";
-import { computed, defineComponent, PropType } from "vue";
-import Dropdown from "./Dropdown.vue";
-import DropdownItem from "./DropdownItem.vue";
-import { useRouter } from "vue-router";
+import { GlobalDataProps, Userprops } from '@/store'
+import { useStore } from 'vuex'
+import { computed, defineComponent, PropType } from 'vue'
+import Dropdown from './Dropdown.vue'
+import DropdownItem from './DropdownItem.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
-  name: "GlobalHeader",
+  name: 'GlobalHeader',
   components: { Dropdown, DropdownItem },
   props: {
     user: {
       type: Object as PropType<Userprops>,
-      required: true,
-    },
+      required: true
+    }
   },
-  emits:['reload'],
-  setup(props,context) {
-    const store = useStore<GlobalDataProps>();
-    const router = useRouter();
-    const columnId = computed(() => props.user.column);
-    const isLogin = computed(() => store.state.user.isLogin);
+  emits: ['reload'],
+  setup(props, context) {
+    const store = useStore<GlobalDataProps>()
+    const router = useRouter()
+    const columnId = computed(() => props.user.column)
+    const isLogin = computed(() => store.state.user.isLogin)
     const onLogout = () => {
-      store.commit("logout");
-      router.push("/login");
-    };
+      store.commit('logout')
+      router.push('/login')
+    }
     const reloadPage = () => {
       context.emit('reload')
     }
@@ -79,10 +77,9 @@ export default defineComponent({
       onLogout,
       isLogin,
       reloadPage
-    };
-  },
-});
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

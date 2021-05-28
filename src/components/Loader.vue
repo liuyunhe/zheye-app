@@ -6,7 +6,7 @@
     >
       <div class="loading-content">
         <div class="spinner-border text-primary" role="status">
-          <span class="sr-only">{{ text || "loading" }}</span>
+          <span class="sr-only">{{ text || 'loading' }}</span>
         </div>
         <p v-if="text" class="text-primary small">{{ text }}</p>
       </div>
@@ -15,23 +15,23 @@
 </template>
 
 <script lang="ts">
-import useDOMCreate from "@/hooks/useDOMCreate";
-import { defineComponent } from "vue";
+import useDOMCreate from '@/hooks/useDOMCreate'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "Loader",
+  name: 'Loader',
   props: {
     text: {
-      type: String,
+      type: String
     },
     background: {
-      type: String,
-    },
+      type: String
+    }
   },
   setup() {
     useDOMCreate('back')
-  },
-});
+  }
+})
 </script>
 
 <style scoped>

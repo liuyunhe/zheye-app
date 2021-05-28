@@ -10,39 +10,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from "vue";
-import mitt from "mitt";
+import { defineComponent, onUnmounted } from 'vue'
+import mitt from 'mitt'
 
-type validateFunc = () => boolean;
+type validateFunc = () => boolean
 
-export const emitter = mitt();
+export const emitter = mitt()
 
 export default defineComponent({
-  name: "ValidateForm",
-  emits: ["form-submit"],
+  name: 'ValidateForm',
+  emits: ['form-submit'],
   setup(props, context) {
-    let funcArr: (validateFunc | undefined)[] = [];
+    let funcArr: (validateFunc | undefined)[] = []
     const submitForm = () => {
       const result = funcArr
         .map((func) => (func as validateFunc)())
-        .every((result) => result);
-      context.emit("form-submit", result);
-    };
+        .every((result) => result)
+      context.emit('form-submit', result)
+    }
     const callback = (func: validateFunc | undefined) => {
-      funcArr.push(func);
-    };
+      funcArr.push(func)
+    }
 
-    emitter.on("form-item-created", callback);
+    emitter.on('form-item-created', callback)
     onUnmounted(() => {
-      emitter.off("form-item-created", callback);
-      funcArr = [];
-    });
+      emitter.off('form-item-created', callback)
+      funcArr = []
+    })
     return {
-      submitForm,
-    };
-  },
-});
+      submitForm
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

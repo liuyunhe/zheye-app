@@ -1,94 +1,110 @@
-import { arrToObj, objToArr } from './helper';
-import { Commit, createStore } from "vuex";
+/* eslint-disable */
+import { arrToObj, objToArr } from './helper'
+import { Commit, createStore } from 'vuex'
 import axios, { AxiosRequestConfig } from 'axios'
 
 interface ListProps<P> {
   [id: string]: P
 }
 export interface ImageProps {
-  _id?: string;
-  url?: string;
-  createdAt?: string;
+  _id?: string
+  url?: string
+  createdAt?: string
   fitUrl?: string
 }
 export interface ColumnProps {
-  _id: string;
-  title: string;
-  avatar?: ImageProps;
-  description: string;
+  _id: string
+  title: string
+  avatar?: ImageProps
+  description: string
 }
 export interface PostProps {
-  _id?: string;         //  文章识别标识
-  title: string;
-  excerpt?: string;
-  content?: string;
-  image?: ImageProps | string;
-  createdAt?: string;
-  column: string;
-  author?: string | Userprops;
-  isHTML?: boolean;
+  _id?: string //  文章识别标识
+  title: string
+  excerpt?: string
+  content?: string
+  image?: ImageProps | string
+  createdAt?: string
+  column: string
+  author?: string | Userprops
+  isHTML?: boolean
 }
 export interface PostProps1 {
-  _id?: string;
-  title: string;
-  excerpt?: string;
-  content?: string;
-  image?: ImageProps;
-  createdAt?: string;
-  column: string;
-  author?: string;
-  isHTML?: boolean;
+  _id?: string
+  title: string
+  excerpt?: string
+  content?: string
+  image?: ImageProps
+  createdAt?: string
+  column: string
+  author?: string
+  isHTML?: boolean
 }
 export interface Userprops {
-  isLogin: boolean;
-  nickName?: string;
-  _id?: string;        //  用户识别标识
-  column?: string;     //  所著文章标识
-  email?: string;
-  avatar?: ImageProps;
-  description?: string;
+  isLogin: boolean
+  nickName?: string
+  _id?: string //  用户识别标识
+  column?: string //  所著文章标识
+  email?: string
+  avatar?: ImageProps
+  description?: string
 }
 export interface ResponseType<T> {
-  code: number;
-  msg: string;
+  code: number
+  msg: string
   data: T
 }
 export interface GlobalColumnsProps {
-  data: ListProps<ColumnProps>;
-  currentPage: number;
+  data: ListProps<ColumnProps>
+  currentPage: number
   total: number
 }
 export interface GlobalPostsProps {
-  data: ListProps<PostProps>;
+  data: ListProps<PostProps>
   loadedColumns: ListProps<{ total?: number; currentPage?: number }>
 }
 export interface GlobalDataProps {
-  error: GlobalErrorProps;
-  token: string;
-  loading: boolean;
-  columns: GlobalColumnsProps;
+  error: GlobalErrorProps
+  token: string
+  loading: boolean
+  columns: GlobalColumnsProps
   posts: GlobalPostsProps
-  user: Userprops;
+  user: Userprops
 }
 
 export interface GlobalErrorProps {
-  status: boolean;
+  status: boolean
   message?: string
 }
 
-const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+const getAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit
+) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
   return data
 }
-// eslint-disable-next-line
-const postAndCommit = async (url: string, mutationName: string, commit: Commit, payLoad: any) => {
+
+const postAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit,
+  payLoad: any
+) => {
   const { data } = await axios.post(url, payLoad)
   commit(mutationName, data)
   return data
 }
-// eslint-disable-next-line
-const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'GET' }, extraData?: any) => {
+
+const asyncAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit,
+  config: AxiosRequestConfig = { method: 'GET' },
+  extraData?: any
+) => {
   const { data } = await axios(url, config)
   if (extraData) {
     commit(mutationName, { data, extraData })
@@ -109,7 +125,7 @@ const store = createStore<GlobalDataProps>({
     columns: { data: {}, currentPage: 0, total: 0 },
     posts: { data: {}, loadedColumns: {} },
     user: {
-      isLogin: false,
+      isLogin: false
     }
   },
   getters: {
@@ -120,7 +136,9 @@ const store = createStore<GlobalDataProps>({
       return state.columns.data[id]
     },
     getPostById: (state) => (columnId: string) => {
-      return objToArr(state.posts.data).filter((post) => post.column === columnId)
+      return objToArr(state.posts.data).filter(
+        (post) => post.column === columnId
+      )
     },
     getCurrentPost: (state) => (id: string) => {
       return state.posts.data[id]
@@ -136,7 +154,7 @@ const store = createStore<GlobalDataProps>({
     logout(state) {
       state.token = ''
       state.user = {
-        isLogin: false,
+        isLogin: false
       }
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.Authorization
@@ -203,9 +221,12 @@ const store = createStore<GlobalDataProps>({
     fetchColumns({ state, commit }, params = {}) {
       const { currentPage = 1, pageSize = 6 } = params
       if (state.columns.currentPage < currentPage) {
-        return getAndCommit(`/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit)
+        return getAndCommit(
+          `/columns?currentPage=${currentPage}&pageSize=${pageSize}`,
+          'fetchColumns',
+          commit
+        )
       }
-
     },
     fetchColumn({ state, commit }, cid) {
       if (!state.columns.data[cid]) {
@@ -214,10 +235,24 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts({ state, commit }, { cid, currentPage = 1, pageSize = 5 }) {
       if (!state.posts.loadedColumns[cid]) {
-        return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit, { method: 'GET' }, cid)
-      }else{
-        if(state.posts.loadedColumns[cid].currentPage as number < currentPage){
-          return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit, { method: 'GET' }, cid)
+        return asyncAndCommit(
+          `/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
+          'fetchPosts',
+          commit,
+          { method: 'GET' },
+          cid
+        )
+      } else {
+        if (
+          (state.posts.loadedColumns[cid].currentPage as number) < currentPage
+        ) {
+          return asyncAndCommit(
+            `/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
+            'fetchPosts',
+            commit,
+            { method: 'GET' },
+            cid
+          )
         }
       }
     },
@@ -230,21 +265,31 @@ const store = createStore<GlobalDataProps>({
       }
     },
     updatePost({ commit }, { id, payLoad }) {
-      return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, { method: 'PATCH', data: payLoad })
+      return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, {
+        method: 'PATCH',
+        data: payLoad
+      })
     },
     updateUser({ commit }, { id, payLoad }) {
-      return asyncAndCommit(`/user/${id}`, 'updateUser', commit, { method: 'PATCH', data: payLoad })
+      return asyncAndCommit(`/user/${id}`, 'updateUser', commit, {
+        method: 'PATCH',
+        data: payLoad
+      })
     },
     updateColum({ commit }, { id, payLoad }) {
-      return asyncAndCommit(`/columns/${id}`, 'fetchColumn', commit, { method: 'PATCH', data: payLoad })
+      return asyncAndCommit(`/columns/${id}`, 'fetchColumn', commit, {
+        method: 'PATCH',
+        data: payLoad
+      })
     },
     createPost({ commit }, payLoad) {
       return postAndCommit(`/posts`, 'createPost', commit, payLoad)
     },
     deletePost({ commit }, id) {
-      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'DELETE' })
-    },
-
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, {
+        method: 'DELETE'
+      })
+    }
   }
 })
 

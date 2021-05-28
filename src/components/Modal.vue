@@ -36,38 +36,37 @@
 </template>
 
 <script lang="ts">
-import useDOMCreate from "@/hooks/useDOMCreate";
-import { defineComponent } from "vue";
+import useDOMCreate from '@/hooks/useDOMCreate'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
     visible: {
       type: Boolean,
-      default: false,
+      default: false
     },
     title: {
-      type: String,
-    },
+      type: String
+    }
   },
-  emits: ["modal-on-close", "modal-on-confirm"],
+  emits: ['modal-on-close', 'modal-on-confirm'],
   setup(props, context) {
     const onClose = () => {
-      context.emit("modal-on-close");
-    };
+      context.emit('modal-on-close')
+    }
 
     const onConfirm = () => {
-      context.emit("modal-on-confirm");
-    };
+      context.emit('modal-on-confirm')
+    }
 
-    useDOMCreate("modal");
+    useDOMCreate('modal')
 
     return {
       onClose,
-      onConfirm,
-    };
-  },
-});
+      onConfirm
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -17,29 +17,29 @@
 </template>
 
 <script lang="ts">
-import { Userprops } from "@/store";
-import { computed, defineComponent, PropType } from "vue";
+import { Userprops } from '@/store'
+import { computed, defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   props: {
     user: {
       type: Object as PropType<Userprops>,
-      required: true,
-    },
+      required: true
+    }
   },
   setup(props) {
     const fitUrl = computed(() => {
-      const { avatar } = props.user;
+      const { avatar } = props.user
       return avatar
-        ? avatar.url + "?x-oss-process=image/resize,m_pad,h_50,w_50"
-        : require("../assets/avatar.jpg");
-    });
+        ? avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
+        : require('../assets/avatar.jpg')
+    })
 
     return {
-      fitUrl,
-    };
-  },
-});
+      fitUrl
+    }
+  }
+})
 </script>
 
 <style>

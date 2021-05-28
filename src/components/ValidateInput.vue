@@ -32,25 +32,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, onMounted, computed } from "vue";
-import { emitter } from "./ValidateForm.vue";
-const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+import { defineComponent, PropType, reactive, onMounted, computed } from 'vue'
+import { emitter } from './ValidateForm.vue'
+const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 interface RuleProp {
-  type: "required" | "email" | "custom";
-  message: string;
-  validator?: () => boolean;
+  type: 'required' | 'email' | 'custom'
+  message: string
+  validator?: () => boolean
 }
-export type RulesProp = RuleProp[];
-export type TagType = "input" | "textarea";
+export type RulesProp = RuleProp[]
+export type TagType = 'input' | 'textarea'
 export default defineComponent({
   props: {
     rules: Array as PropType<RulesProp>,
     modelValue: String,
     tag: {
       type: String as PropType<TagType>,
-      default: "input",
-    },
+      default: 'input'
+    }
   },
   inheritAttrs: false, //  禁用属性继承
   setup(props, context) {
@@ -58,15 +58,15 @@ export default defineComponent({
       //  直接赋值modelValue
       val: computed({
         get: () => {
-          return props.modelValue || "";
+          return props.modelValue || ''
         },
         set: (val) => {
-          context.emit("update:modelValue", val);
-        },
+          context.emit('update:modelValue', val)
+        }
       }),
       error: false,
-      message: "",
-    });
+      message: ''
+    })
 
     //  手动执行v-model
     // watch(()=>props.modelValue, (newValue)=>{
@@ -84,43 +84,43 @@ export default defineComponent({
       if (props.rules) {
         // 验证所有规则
         const allPassed = props.rules.every((rule) => {
-          let passed = true;
-          inputRef.message = rule.message;
+          let passed = true
+          inputRef.message = rule.message
           switch (rule.type) {
-            case "required":
-              passed = inputRef.val.trim() !== "";
-              break;
-            case "email":
-              passed = emailReg.test(inputRef.val);
-              break;
-            case "custom":
-              passed = rule.validator ? rule.validator() : true;
-              break;
+            case 'required':
+              passed = inputRef.val.trim() !== ''
+              break
+            case 'email':
+              passed = emailReg.test(inputRef.val)
+              break
+            case 'custom':
+              passed = rule.validator ? rule.validator() : true
+              break
             default:
-              break;
+              break
           }
-          return passed;
-        });
-        inputRef.error = !allPassed;
-        return allPassed;
+          return passed
+        })
+        inputRef.error = !allPassed
+        return allPassed
       }
-      return true;
-    };
+      return true
+    }
     onMounted(() => {
-      emitter.emit("form-item-created", validateInput);
-    });
+      emitter.emit('form-item-created', validateInput)
+    })
 
     return {
       inputRef,
-      validateInput,
+      validateInput
       // updatedValue,
-    };
-  },
-});
+    }
+  }
+})
 </script>
 
 <style scoped>
-.h60{
+.h60 {
   height: 60px;
 }
 </style>
